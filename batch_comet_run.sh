@@ -2,11 +2,11 @@
 
 #SBATCH --partition compute
 #SBATCH --nodes=10
-#SBATCH --ntasks-per-node=24
+#SBATCH --ntasks-per-node=20
 #SBATCH -A TG-DBS180005
 #SBATCH --job-name=full_run
 #SBATCH --output=full_run.out
-#SBATCH --time 0-06:00
+#SBATCH --time 0-02:00
 
 module purge
 #module load python

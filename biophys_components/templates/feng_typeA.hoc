@@ -47,7 +47,7 @@ proc init(){
 
 	// electrophysiology
 	mechinit()			// local fcn: set values for max conductances and reversal potentials of ion channels and other ephys parameters that are subject to fitting
-	insert_mechs()		// local fcn: insert ion channels and actually set values determined in the mechinit fcn
+	insert_mechs(100)		// local fcn: insert ion channels and actually set values determined in the mechinit fcn
 	set_chanparams()	// local fcn: after all channels have been inserted, then their other parameters can be set	
 
 	// synapses
@@ -176,6 +176,7 @@ proc mechinit() {
 }
 
 proc insert_mechs(){
+		r = $1
 		forall {
 			insert na gbar_na=0
 			insert na12  gbar_na12=0
@@ -230,9 +231,9 @@ proc insert_mechs(){
 			insert sAHP gsAHPbar_sAHP = gsAHP
 			insert im gbar_im = gm
 			insert kap gkabar_kap = gkap	
-		/*	
+			
 			noiseRandObj_exc=new Random()
-			noiseRandObj_exc.Random123(100)   
+			noiseRandObj_exc.Random123(r)   
     			noiseRandObj_exc.normal(0,1)
 	
 			noise_exc = new Gfluct2_exc(0.5)
@@ -242,7 +243,7 @@ proc insert_mechs(){
     			noise_exc.setRandObj(noiseRandObj_exc)
 			
 			noiseRandObj_inh=new Random()
-			noiseRandObj_inh.Random123(100)   
+			noiseRandObj_inh.Random123(r)   
     			noiseRandObj_inh.normal(0,1)
 	
 			noise_inh = new Gfluct2_inh(0.5)
@@ -250,7 +251,7 @@ proc insert_mechs(){
     			noise_inh.g_e0 = 0.021
     			noise_inh.std_e = 0.008	
     			noise_inh.setRandObj(noiseRandObj_inh)
-		*/
+		
 
 		}
 

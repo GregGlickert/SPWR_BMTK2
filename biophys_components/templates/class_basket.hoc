@@ -16,6 +16,9 @@ strdef myroot, myname
 // objects
 objref syn, pre_list, templist, rootlist, myrootsec, this, rr, rv
 
+objref noiseRandObj_exc, noiseRandObj_inh
+objref noise_exc, noise_inh, cclA
+
 // external variables
 //external numCellTypes, cellType, VClampVector
 
@@ -41,7 +44,7 @@ proc init() {
 	
 	// electrophysiology
 	mechinit()			// local fcn: set values for max conductances and reversal potentials of ion channels and other ephys parameters that are subject to fitting
-	insert_mechs()		// local fcn: insert ion channels and actually set values determined in the mechinit fcn
+	insert_mechs(100)		// local fcn: insert ion channels and actually set values determined in the mechinit fcn
 	set_chanparams()	// local fcn: after all channels have been inserted, then their other parameters can be set	
 
 	// synapses
@@ -130,7 +133,7 @@ proc mechinit() {
 
 proc insert_mechs() {
 
-
+        r = $1
 	forsec soma_list {
 		Ra = RaSoma
 		cm = CmSoma
@@ -143,6 +146,27 @@ proc insert_mechs() {
 		
 		insert leakinter
 		glbar_inter_leakinter = 1/RmSoma
+		
+		noiseRandObj_exc=new Random()
+		noiseRandObj_exc.Random123(r)   
+    		noiseRandObj_exc.normal(0,1)
+	
+		noise_exc = new Gfluct2_exc(0.5)
+    
+    		noise_exc.g_e0 = 0.00121//0.0032
+    		noise_exc.std_e = 0.00012//0.003	
+    		noise_exc.setRandObj(noiseRandObj_exc)
+			
+		noiseRandObj_inh=new Random()
+		noiseRandObj_inh.Random123(r)   
+    		noiseRandObj_inh.normal(0,1)
+	
+		noise_inh = new Gfluct2_inh(0.5)
+    
+    		noise_inh.g_i0 = 0.00573
+    		noise_inh.std_i = 0.00264
+    		noise_inh.setRandObj(noiseRandObj_inh)
+	
 	}
 	
 	forsec dend_list{
