@@ -3,27 +3,29 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import pdb
+from mpl_toolkits.mplot3d import Axes3D
 
-f = h5py.File('SPWR_biophysical_SPWR_biophysical_edges.h5','r')
-g = h5py.File('SPWR_biophysical_nodes.h5','r')
+f = h5py.File('./network/SPWR_biophysical_SPWR_biophysical_edges.h5','r')
+g = h5py.File('./network/SPWR_biophysical_nodes.h5','r')
 
-source = f['edges']['SPWR_biophysical_SPWR_biophysical']['source_node_id']
-target = f['edges']['SPWR_biophysical_SPWR_biophysical']['target_node_id']
+source = f['edges']['SPWR_biophysical_to_SPWR_biophysical']['source_node_id']
+target = f['edges']['SPWR_biophysical_to_SPWR_biophysical']['target_node_id']
 
+n_cells = 3375
+pn_ids = np.arange(0,2767)
+itn_ids = np.arange(2768,3375)
 
 positions = g['nodes']['SPWR_biophysical']['0']['positions']
-source_pos = pd.DataFrame(data=np.concatenate((np.arange(0,27000).reshape(-1,1), 
+source_pos = pd.DataFrame(data=np.concatenate((np.arange(0, n_cells).reshape(-1,1), 
 						positions[:,:],
-						np.where(np.arange(0,27000)<22140,'PN','ITN').reshape(-1,1)),axis=1),
+						np.where(np.arange(0,n_cells)<pn_ids[-1],'PN','ITN').reshape(-1,1)),axis=1),
 			  columns=['source_ID','source_x','source_y','source_z','source_type'])
 
-target_pos = pd.DataFrame(data=np.concatenate((np.arange(0,27000).reshape(-1,1), 
+target_pos = pd.DataFrame(data=np.concatenate((np.arange(0,n_cells).reshape(-1,1), 
 						positions[:,:],
-						np.where(np.arange(0,27000)<22140,'PN','ITN').reshape(-1,1)),axis=1),
+						np.where(np.arange(0,n_cells)<pn_ids[-1],'PN','ITN').reshape(-1,1)),axis=1),
 			  columns=['target_ID','target_x','target_y','target_z','target_type'])
 
-pn_ids = np.arange(0,22140)
-itn_ids = np.arange(22140,27000)
 
 conns = pd.DataFrame(data=np.concatenate((source[:].reshape(-1,1),target[:].reshape(-1,1)),axis=1),
                      columns=['source_ID','target_ID'])
@@ -43,11 +45,43 @@ d = np.sqrt(np.sum((conns[['source_x', 'source_y', 'source_z']].values.astype(in
 
 conns.loc[:,'distance'] = d
 
+conns.loc[:,'source_x'] = conns.loc[:,'source_x'].astype(int)
+conns.loc[:,'source_y'] = conns.loc[:,'source_y'].astype(int)
+conns.loc[:,'source_z'] = conns.loc[:,'source_z'].astype(int)
+
+conns.loc[:,'target_x'] = conns.loc[:,'target_x'].astype(int)
+conns.loc[:,'target_y'] = conns.loc[:,'target_y'].astype(int)
+conns.loc[:,'target_z'] = conns.loc[:,'target_z'].astype(int)
 
 PN2PN = conns[(conns.source_type=='PN') & (conns.target_type=='PN')]
 PN2ITN = conns[(conns.source_type=='PN') & (conns.target_type=='ITN')]
 ITN2PN = conns[(conns.source_type=='ITN') & (conns.target_type=='PN')]
 ITN2ITN = conns[(conns.source_type=='ITN') & (conns.target_type=='ITN')]
+
+
+# example connectivity scatter #
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+
+cell_to_plot = 772
+
+ax.scatter(int(conns[conns.source_ID==cell_to_plot]['source_x'].values[0]),
+	   int(conns[conns.source_ID==cell_to_plot]['source_y'].values[0]), 
+	   int(conns[conns.source_ID==cell_to_plot]['source_z'].values[0]), 
+	   marker='^',color='r')
+
+pn2itn_x = PN2ITN[PN2ITN.source_ID==cell_to_plot]['target_x'].values
+pn2itn_y = PN2ITN[PN2ITN.source_ID==cell_to_plot]['target_y'].values
+pn2itn_z = PN2ITN[PN2ITN.source_ID==cell_to_plot]['target_z'].values
+
+ax.scatter(pn2itn_x,pn2itn_y,pn2itn_z,marker='o',color='blue')
+
+pn2pn_x = PN2PN[PN2PN.source_ID==cell_to_plot]['target_x'].values
+pn2pn_y = PN2PN[PN2PN.source_ID==cell_to_plot]['target_y'].values
+pn2pn_z = PN2PN[PN2PN.source_ID==cell_to_plot]['target_z'].values
+
+ax.scatter(pn2pn_x,pn2pn_y,pn2pn_z,marker='o',color='red')
 
 # PN2PN figure #
 plt.figure()

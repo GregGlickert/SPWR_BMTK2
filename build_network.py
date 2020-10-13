@@ -1,6 +1,6 @@
 from bmtk.builder import NetworkBuilder
 import numpy as np
-from bmtk.builder.auxi.node_params import positions_cuboid, positions_list
+from bmtk.builder.auxi.node_params import positions_cuboid, positions_list, xiter_random
 import synapses
 
 np.random.seed(123412)
@@ -21,9 +21,9 @@ pos_list = np.vstack([xx.ravel(), yy.ravel(), zz.ravel()]).T
 #7 minutes with just delay
 #6 minutes just delay but no calculation
 #Number of cells in each population
-numPN_A = 15930
-numPN_C = 6210
-numBask = 4860
+numPN_A = 1991
+numPN_C = 776
+numBask = 608
 # numPN_A = 20
 # numPN_C = 20
 # numBask = 10
@@ -45,6 +45,7 @@ pyra_pos = pos.copy()
 # Add a population of numPN_A nodes (all of which share model_type, dynamics_params, etc.)
 net.add_nodes(N=numPN_A, pop_name='PyrA',
               positions=positions_list(positions=pos),
+	      rotation_angle_yaxis=xiter_random(N=numPN_A, min_x=0.0, max_x=2*np.pi),
               mem_potential='e',
               model_type='biophysical',
               model_template='hoc:feng_typeA',
