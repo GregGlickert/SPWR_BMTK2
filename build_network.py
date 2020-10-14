@@ -2,14 +2,14 @@ from bmtk.builder import NetworkBuilder
 import numpy as np
 from bmtk.builder.auxi.node_params import positions_cuboid, positions_list, xiter_random
 import synapses
-
+import pdb
 np.random.seed(123412)
 
 # Initialize our network
 net = NetworkBuilder("SPWR_biophysical")
 
 # Create the possible x,y,z coordinates
-xside_length = 600; yside_length = 600; height = 600; min_dist = 20;
+xside_length = 300; yside_length = 300; height = 300; min_dist = 20;
 x_grid = np.arange(0,xside_length+min_dist,min_dist)
 y_grid = np.arange(0,yside_length+min_dist,min_dist)
 z_grid = np.arange(0,height+min_dist,min_dist)
@@ -45,6 +45,7 @@ pyra_pos = pos.copy()
 # Add a population of numPN_A nodes (all of which share model_type, dynamics_params, etc.)
 net.add_nodes(N=numPN_A, pop_name='PyrA',
               positions=positions_list(positions=pos),
+	      rotation_angle_zaxis=xiter_random(N=numPN_A, min_x=0.0, max_x=2*np.pi),
 	      rotation_angle_yaxis=xiter_random(N=numPN_A, min_x=0.0, max_x=2*np.pi),
               mem_potential='e',
               model_type='biophysical',
@@ -66,6 +67,8 @@ pyrc_pos = pos.copy()
 # Add a population of numPN_A nodes (all of which share model_type, dynamics_params, etc.)
 net.add_nodes(N=numPN_C, pop_name='PyrC',
               positions=positions_list(positions=pos),
+	      rotation_angle_zaxis=xiter_random(N=numPN_C, min_x=0.0, max_x=2*np.pi),
+	      rotation_angle_yaxis=xiter_random(N=numPN_C, min_x=0.0, max_x=2*np.pi),
               mem_potential='e',
               model_type='biophysical',
               model_template='hoc:feng_typeC',
@@ -105,6 +108,8 @@ nid_pos = np.concatenate([pyra_pos, pyrc_pos, bask_pos])
 # Add a population of numBask nodes
 net.add_nodes(N=numBask, pop_name='Bask',
               positions=positions_list(positions=pos),
+	      rotation_angle_zaxis=xiter_random(N=numBask, min_x=0.0, max_x=2*np.pi),
+	      rotation_angle_yaxis=xiter_random(N=numBask, min_x=0.0, max_x=2*np.pi),
               mem_potential='e',
               model_type='biophysical',
               model_template='hoc:basket',
@@ -127,6 +132,36 @@ exc_bg_bask.add_nodes(N=numBask,
                    model_type='virtual')
 ##############################################################################
 ############################## CONNECT CELLS #################################
+
+def dist_conn_perc_angle(src, trg, min_dist=0.0, max_dist=300.0, min_syns=1, max_syns=2, A=0.2, B=0.2):
+    
+    sid = src.node_id
+    tid = trg.node_id
+    # No autapses
+    if sid==tid:
+        return None
+    else:
+        src_pos = src['positions']
+        trg_pos = trg['positions']
+    #dist =np.sqrt((src_pos[0]-trg_pos[0])**2+(src_pos[1]-trg_pos[1])**2+(src_pos[2]-trg_pos[2])**2)
+        src_angle_x = src['rotation_angle_zaxis'] 
+        src_angle_y = src['rotation_angle_yaxis']
+
+        # We must calculate vec_pos, the coordinates of the point on the tip
+        # of the unit vector pointing from src_pos
+        vec_pos = [np.cos(src_angle_x), np.sin(src_angle_y), np.sin(src_angle_x)] 
+        perp_dist = np.linalg.norm(np.cross((trg_pos-src_pos),(trg_pos-vec_pos)))/np.linalg.norm((vec_pos - src_pos))
+
+        #print("src_pos: {} trg_pos: {} dist: {}".format(src_pos,trg_pos,dist))        
+    prob = A
+
+    if perp_dist <= max_dist and np.random.uniform() < prob:
+        tmp_nsyn = np.random.randint(min_syns, max_syns)
+        #print("creating {} synapse(s) between cell {} and {}".format(tmp_nsyn,sid,tid))
+    else:
+        tmp_nsyn = 0
+
+    return tmp_nsyn
 
 def dist_conn_perc(src, trg, min_dist=0.0, max_dist=300.0, min_syns=1, max_syns=2, A=0.2, B=0.2):
     
@@ -194,8 +229,8 @@ min_delays.append(syn[dynamics_file]['delay'])
 
 conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': ['PyrA','PyrC']},
               iterator = 'one_to_one',
-              connection_rule=dist_conn_perc,
-              connection_params={'min_dist':0.0,'max_dist':100000.0,
+              connection_rule=dist_conn_perc_angle,
+              connection_params={'min_dist':0.0,'max_dist':50.0,
 			         'min_syns':1,'max_syns':2,'A':0.01366,'B':0.008618},
               syn_weight=1,
 	      delay=0.1,
@@ -225,8 +260,8 @@ min_delays.append(syn[dynamics_file]['delay'])
 
 conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': 'Bask'},
               iterator = 'one_to_one',
-	      connection_rule=dist_conn_perc,
-              connection_params={'min_dist':0.0,'max_dist':100000.0,
+	      connection_rule=dist_conn_perc_angle,
+              connection_params={'min_dist':0.0,'max_dist':50.0,
 			         'min_syns':1,'max_syns':2,'A':0.3217,'B':0.005002},
               syn_weight=1,
 	      delay = 0.1,

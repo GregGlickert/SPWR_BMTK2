@@ -16,6 +16,9 @@ pn_ids = np.arange(0,2767)
 itn_ids = np.arange(2768,3375)
 
 positions = g['nodes']['SPWR_biophysical']['0']['positions']
+y_angles = g['nodes']['SPWR_biophysical']['0']['rotation_angle_yaxis']
+z_angles = g['nodes']['SPWR_biophysical']['0']['rotation_angle_zaxis']
+
 source_pos = pd.DataFrame(data=np.concatenate((np.arange(0, n_cells).reshape(-1,1), 
 						positions[:,:],
 						np.where(np.arange(0,n_cells)<pn_ids[-1],'PN','ITN').reshape(-1,1)),axis=1),
@@ -34,10 +37,10 @@ conns = conns.join(source_pos,on='source_ID',rsuffix='_x')
 conns = conns.join(target_pos,on='target_ID',rsuffix='_x')
 
 
-#print(conns[(conns.source_x.astype(int)<400)&(conns.source_x.astype(int)>200)&
-#      (conns.source_y.astype(int)<400)&(conns.source_y.astype(int)>200)&
-#      (conns.source_z.astype(int)<400)&(conns.source_z.astype(int)>200)&
-#      (conns.source_type=='PN')]['source_ID'])
+print(conns[(conns.source_x.astype(int)<400)&(conns.source_x.astype(int)>200)&
+      (conns.source_y.astype(int)<400)&(conns.source_y.astype(int)>200)&
+      (conns.source_z.astype(int)<400)&(conns.source_z.astype(int)>200)&
+      (conns.source_type=='PN')]['source_ID'])
 
 
 d = np.sqrt(np.sum((conns[['source_x', 'source_y', 'source_z']].values.astype(int)
@@ -59,29 +62,47 @@ ITN2PN = conns[(conns.source_type=='ITN') & (conns.target_type=='PN')]
 ITN2ITN = conns[(conns.source_type=='ITN') & (conns.target_type=='ITN')]
 
 
-# example connectivity scatter #
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
 
+def plot_scatter(cell_to_plot):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    src_pos_x = int(conns[conns.source_ID==cell_to_plot]['source_x'].values[0])
+    src_pos_y = int(conns[conns.source_ID==cell_to_plot]['source_y'].values[0])
+    src_pos_z = int(conns[conns.source_ID==cell_to_plot]['source_z'].values[0])
 
-cell_to_plot = 772
+    ax.scatter(src_pos_x, src_pos_y, src_pos_z, marker='^',color='r')
 
-ax.scatter(int(conns[conns.source_ID==cell_to_plot]['source_x'].values[0]),
-	   int(conns[conns.source_ID==cell_to_plot]['source_y'].values[0]), 
-	   int(conns[conns.source_ID==cell_to_plot]['source_z'].values[0]), 
-	   marker='^',color='r')
+    src_angle_y = y_angles[cell_to_plot]
+    src_angle_x = z_angles[cell_to_plot]
+    vec_line_pos = [np.cos(src_angle_x), np.sin(src_angle_y), np.sin(src_angle_x)] 
+    vec_line_neg = [np.cos(src_angle_x), np.sin(-src_angle_y), np.sin(src_angle_x)] 
 
-pn2itn_x = PN2ITN[PN2ITN.source_ID==cell_to_plot]['target_x'].values
-pn2itn_y = PN2ITN[PN2ITN.source_ID==cell_to_plot]['target_y'].values
-pn2itn_z = PN2ITN[PN2ITN.source_ID==cell_to_plot]['target_z'].values
+    ax.plot([vec_line_neg[0],5*src_pos_x], [vec_line_neg[1], 5*src_pos_y], [vec_line_neg[2], 5*src_pos_z],color='m')
 
-ax.scatter(pn2itn_x,pn2itn_y,pn2itn_z,marker='o',color='blue')
+    pn2itn_x = PN2ITN[PN2ITN.source_ID==cell_to_plot]['target_x'].values
+    pn2itn_y = PN2ITN[PN2ITN.source_ID==cell_to_plot]['target_y'].values
+    pn2itn_z = PN2ITN[PN2ITN.source_ID==cell_to_plot]['target_z'].values
 
-pn2pn_x = PN2PN[PN2PN.source_ID==cell_to_plot]['target_x'].values
-pn2pn_y = PN2PN[PN2PN.source_ID==cell_to_plot]['target_y'].values
-pn2pn_z = PN2PN[PN2PN.source_ID==cell_to_plot]['target_z'].values
+    ax.scatter(pn2itn_x,pn2itn_y,pn2itn_z,marker='o',color='blue')
 
-ax.scatter(pn2pn_x,pn2pn_y,pn2pn_z,marker='o',color='red')
+    pn2pn_x = PN2PN[PN2PN.source_ID==cell_to_plot]['target_x'].values
+    pn2pn_y = PN2PN[PN2PN.source_ID==cell_to_plot]['target_y'].values
+    pn2pn_z = PN2PN[PN2PN.source_ID==cell_to_plot]['target_z'].values
+
+    ax.scatter(pn2pn_x,pn2pn_y,pn2pn_z,marker='o',color='red')
+
+    ax.set_xlim(0,300)
+    ax.set_ylim(0,300)
+    ax.set_zlim(0,300)
+    ax.set_xlabel('x')
+    ax.set_ylabel('y')
+    ax.set_zlabel('z')
+
+plot_scatter(1674)
+plot_scatter(99)
+plot_scatter(999)
+plot_scatter(1001)
+
 
 # PN2PN figure #
 plt.figure()
