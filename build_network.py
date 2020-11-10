@@ -9,7 +9,7 @@ np.random.seed(123412)
 net = NetworkBuilder("SPWR_biophysical")
 
 # Create the possible x,y,z coordinates
-xside_length = 300; yside_length = 300; height = 300; min_dist = 20;
+xside_length = 1400; yside_length = 1400; height = 200; min_dist = 20;
 x_grid = np.arange(0,xside_length+min_dist,min_dist)
 y_grid = np.arange(0,yside_length+min_dist,min_dist)
 z_grid = np.arange(0,height+min_dist,min_dist)
@@ -21,9 +21,10 @@ pos_list = np.vstack([xx.ravel(), yy.ravel(), zz.ravel()]).T
 #7 minutes with just delay
 #6 minutes just delay but no calculation
 #Number of cells in each population
-numPN_A = 1991
-numPN_C = 776
-numBask = 608
+numPN_A = 4114#15930
+numPN_C = 4115#6210
+numBask = 1854#4860
+numAAC = 203
 # numPN_A = 20
 # numPN_C = 20
 # numBask = 10
@@ -76,20 +77,24 @@ net.add_nodes(N=numPN_C, pop_name='PyrC',
 #################################################################################
 ############################# Chandelier ########################################
 
-## Get rid of coordinates already used
-#pos_list = np.delete(pos_list,inds,0)
-#
-## Pick new coordinates
-#inds = np.random.choice(np.arange(0,np.size(pos_list,0)),numAAC,replace=False)
-#pos = pos_list[inds,:]
-#
-## Add a population of numAAC nodes
-#net.add_nodes(N=numAAC, pop_name='AAC',
-#              positions=positions_list(positions=pos),
-#              mem_potential='e',
-#              model_type='biophysical',
-#              model_template='hoc:chandelier',
-#              morphology=None)
+# Get rid of coordinates already used
+pos_list = np.delete(pos_list,inds,0)
+
+# Pick new coordinates
+inds = np.random.choice(np.arange(0,np.size(pos_list,0)),numAAC,replace=False)
+pos = pos_list[inds,:]
+
+aac_pos = pos.copy()
+
+# Add a population of numAAC nodes
+net.add_nodes(N=numAAC, pop_name='AAC',
+              positions=positions_list(positions=pos),
+	      rotation_angle_zaxis=xiter_random(N=numAAC, min_x=0.0, max_x=2*np.pi),
+	      rotation_angle_yaxis=xiter_random(N=numAAC, min_x=0.0, max_x=2*np.pi),
+              mem_potential='e',
+              model_type='biophysical',
+              model_template='hoc:chandelier',
+              morphology=None)
 
 #################################################################################
 ###########################Fast - spiking PV ints################################
@@ -102,7 +107,7 @@ inds = np.random.choice(np.arange(0,np.size(pos_list,0)),numBask,replace=False)
 pos = pos_list[inds,:]
 
 bask_pos = pos.copy()
-nid_pos = np.concatenate([pyra_pos, pyrc_pos, bask_pos])
+nid_pos = np.concatenate([pyra_pos, pyrc_pos, aac_pos, bask_pos])
 #import pdb; pdb.set_trace()
 
 # Add a population of numBask nodes
@@ -229,7 +234,7 @@ min_delays.append(syn[dynamics_file]['delay'])
 
 conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': ['PyrA','PyrC']},
               iterator = 'one_to_one',
-              connection_rule=dist_conn_perc_angle,
+              connection_rule=dist_conn_perc,
               connection_params={'min_dist':0.0,'max_dist':50.0,
 			         'min_syns':1,'max_syns':2,'A':0.01366,'B':0.008618},
               syn_weight=1,
@@ -260,7 +265,7 @@ min_delays.append(syn[dynamics_file]['delay'])
 
 conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': 'Bask'},
               iterator = 'one_to_one',
-	      connection_rule=dist_conn_perc_angle,
+	      connection_rule=dist_conn_perc,
               connection_params={'min_dist':0.0,'max_dist':50.0,
 			         'min_syns':1,'max_syns':2,'A':0.3217,'B':0.005002},
               syn_weight=1,
@@ -286,18 +291,24 @@ conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': '
 
 
 # Create connections between Pyr --> AAC cells
-#net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': 'AAC'},
-#              connection_rule=dist_conn_perc,
-#              connection_params={'min_dist':0.0,'max_dist':300.0,
-#			         'min_syns':1,'max_syns':2,'A':0.3217,'B':0.005002},
-#              syn_weight=5.0e-03,
-#              weight_function='lognormal',
-#              weight_sigma=1.0e-03,
-#              dynamics_params='AMPA_ExcToExc.json',
-#              model_template='Exp2Syn',
-#              distance_range=[0.0, 300.0],
-#              target_sections=['somatic'],
-#              delay=2.0)
+dynamics_file = 'PN2INT.json'
+
+add_delays.append(True)
+min_delays.append(syn[dynamics_file]['delay'])
+
+conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': 'AAC'},
+              iterator = 'one_to_one',
+	      connection_rule=dist_conn_perc,
+              connection_params={'min_dist':0.0,'max_dist':50.0,
+			         'min_syns':1,'max_syns':2,'A':0.3217,'B':0.005002},
+              syn_weight=1,
+	      delay = 0.1,
+              dynamics_params=dynamics_file,
+              model_template=syn[dynamics_file]['level_of_detail'],
+              distance_range=[0.0, 300.0],
+              target_sections=['somatic'],
+              sec_id=0,
+              sec_x=0.5)
 
 # Create connections between Bask --> Pyr cells
 dynamics_file = 'INT2PN.json'
@@ -334,18 +345,24 @@ conn = net.add_edges(source={'pop_name': 'Bask'}, target={'pop_name': ['PyrA','P
 
 
 # Create connections between AAC --> Pyr cells
-#net.add_edges(source={'pop_name': 'AAC'}, target={'pop_name': ['PyrA','PyrC']},
-#              connection_rule=dist_conn_perc,
-#              connection_params={'min_dist':0.0,'max_dist':300.0,
-#			     'min_syns':1,'max_syns':2,'A':0.3217,'B':0.005002},
-#              syn_weight=5.0e-03,
-#              weight_function='lognormal',
-#              weight_sigma=1.0e-03,
-#              dynamics_params='GABA_AAC.json',
-#              model_template='Exp2Syn',
-#              distance_range=[0.0, 300.0],
-#              target_sections=['somatic'],
-#              delay=2.0)
+dynamics_file = 'INT2PN.json'
+
+add_delays.append(True)
+min_delays.append(syn[dynamics_file]['delay'])
+
+conn = net.add_edges(source={'pop_name': 'AAC'}, target={'pop_name': ['PyrA','PyrC']},
+              iterator = 'one_to_one',
+              connection_rule=dist_conn_perc,
+              connection_params={'min_dist':0.0,'max_dist':100000.0,
+			     'min_syns':1,'max_syns':2,'A':0.313,'B':0.004029},
+              syn_weight=1,
+              delay=0.1,
+              dynamics_params='INT2PN.json',
+              model_template=syn['INT2PN.json']['level_of_detail'],
+              distance_range=[0.0, 300.0],
+              target_sections=['somatic'],
+              sec_id=0,
+              sec_x=0.5)
 
 # Create connections between Bask --> Bask cells
 dynamics_file = 'INT2INT.json'
