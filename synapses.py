@@ -6,6 +6,54 @@ from bmtk.simulator.bionet.pyfunction_cache import add_synapse_model
 from neuron import h
 import numpy as np
 
+def Bg2Int(syn_params, sec_x, sec_id):
+    """Create a bg2int synapse
+    :param syn_params: parameters of a synapse
+    :param sec_x: normalized distance along the section
+    :param sec_id: target section
+    :return: NEURON synapse object
+    """
+
+    lsyn = h.bg2int(sec_x, sec=sec_id)
+
+    if syn_params.get('initW'):
+        m = 0.4
+        s = 0.02
+        mean = np.log(m) - 0.5 * np.log((s/m)**2+1)
+        std = np.sqrt(np.log((s/m)**2 + 1))
+        lsyn.initW = float(np.random.lognormal(mean,std)) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
+    if syn_params.get('taun1'):
+        lsyn.taun1 = float(syn_params['taun1'])
+    if syn_params.get('taun2'):
+        lsyn.taun2 = float(syn_params['taun2'])
+    if syn_params.get('gNMDAmax'):
+        lsyn.gNMDAmax = float(syn_params['gNMDAmax'])
+    if syn_params.get('enmda'):
+        lsyn.enmda = float(syn_params['enmda'])
+    if syn_params.get('taua1'):
+        lsyn.taua1 = float(syn_params['taua1'])
+    if syn_params.get('taua2'):
+        lsyn.taua2 = float(syn_params['taua2'])
+    if syn_params.get('gAMPAmax'):
+        lsyn.gAMPAmax = float(syn_params['gAMPAmax'])
+    if syn_params.get('eampa'):
+        lsyn.eampa = float(syn_params['eampa'])
+    return lsyn
+
+
+def bg2int(syn_params, xs, secs):
+    """Create a list of bg2int synapses
+    :param syn_params: parameters of a synapse
+    :param xs: list of normalized distances along the section
+    :param secs: target sections
+    :return: list of NEURON synpase objects
+    """
+    syns = []
+    for x, sec in zip(xs, secs):
+        syn = Bg2Int(syn_params, x, sec)
+        syns.append(syn)
+    return syns
+
 def Bg2Pyr(syn_params, sec_x, sec_id):
     """Create a bg2pyr synapse
     :param syn_params: parameters of a synapse
@@ -217,6 +265,79 @@ def int2int(syn_params, xs, secs):
         syns.append(syn)
     return syns
 
+def Chn2Pyr(syn_params, sec_x, sec_id):
+    """Create a int2pyr synapse
+    :param syn_params: parameters of a synapse
+    :param sec_x: normalized distance along the section
+    :param sec_id: target section
+    :return: NEURON synapse object
+    """
+
+    lsyn = h.int2pyr(sec_x, sec=sec_id)
+
+    if syn_params.get('AlphaTmax_gaba'):
+        lsyn.AlphaTmax_gaba = float(syn_params['AlphaTmax_gaba']) # par.x(21)
+    if syn_params.get('Beta_gaba'):
+        lsyn.Beta_gaba = float(syn_params['Beta_gaba']) # par.x(22)
+    if syn_params.get('Cdur_gaba'):
+        lsyn.Cdur_gaba = float(syn_params['Cdur_gaba']) # par.x(23)
+    if syn_params.get('gbar_gaba'):
+        lsyn.gbar_gaba = float(syn_params['gbar_gaba']) # par.x(24)
+    if syn_params.get('Erev_gaba'):
+        lsyn.Erev_gaba = float(50.0) # par.x(16)
+
+    
+    if syn_params.get('initW'):
+        m = 0.1
+        s = 0.02
+        mean = np.log(m) - 0.5 * np.log((s/m)**2+1)
+        std = np.sqrt(np.log((s/m)**2 + 1))
+        lsyn.initW = float(np.random.lognormal(mean,std)) # par.x(0) * rC.uniform(0.5,1.0)//rand.normal(0.5,1.5) //`rand.repick() 
+    
+    if syn_params.get('Wmax'):
+        lsyn.Wmax = float(syn_params['Wmax']) * lsyn.initW # par.x(1) * lsyn.initW
+    if syn_params.get('Wmin'):
+        lsyn.Wmin = float(syn_params['Wmin']) * lsyn.initW # par.x(2) * lsyn.initW
+    #delay = float(syn_params['initW']) # par.x(3) + delayDistance
+    #lcon = new NetCon(&v(0.5), lsyn, 0, delay, 1)
+
+    if syn_params.get('lambda1'):
+        lsyn.lambda1 = float(syn_params['lambda1']) # par.x(6)
+    if syn_params.get('lambda2'):
+        lsyn.lambda2 = float(syn_params['lambda2']) # par.x(7)
+    if syn_params.get('threshold1'):
+        lsyn.threshold1 = float(syn_params['threshold1']) # par.x(8)
+    if syn_params.get('threshold2'):
+        lsyn.threshold2 = float(syn_params['threshold2']) # par.x(9)
+    if syn_params.get('tauD1'):
+        lsyn.tauD1 = float(syn_params['tauD1']) # par.x(10)
+    if syn_params.get('d1'):
+        lsyn.d1 = float(syn_params['d1']) # par.x(11)
+    if syn_params.get('tauD2'):
+        lsyn.tauD2 = float(syn_params['tauD2']) # par.x(12)
+    if syn_params.get('d2'):
+        lsyn.d2 = float(syn_params['d2']) # par.x(13)
+    if syn_params.get('tauF'):
+        lsyn.tauF = float(syn_params['tauF']) # par.x(14)
+    if syn_params.get('f'):
+        lsyn.f = float(syn_params['f']) # par.x(15)
+
+    
+    return lsyn
+
+
+def chn2pyr(syn_params, xs, secs):
+    """Create a list of int2pyr synapses
+    :param syn_params: parameters of a synapse
+    :param xs: list of normalized distances along the section
+    :param secs: target sections
+    :return: list of NEURON synpase objects
+    """
+    syns = []
+    for x, sec in zip(xs, secs):
+        syn = Chn2Pyr(syn_params, x, sec)
+        syns.append(syn)
+    return syns
 
 def Int2Pyr(syn_params, sec_x, sec_id):
     """Create a int2pyr synapse
@@ -389,6 +510,8 @@ def pyr2pyr(syn_params, xs, secs):
 def load():
     add_synapse_model(Bg2Pyr, 'bg2pyr', overwrite=False)
     add_synapse_model(Bg2Pyr, overwrite=False)
+    add_synapse_model(Bg2Int, 'bg2int', overwrite=False)
+    add_synapse_model(Bg2Int, overwrite=False)
     add_synapse_model(Pyr2Pyr, 'pyr2pyr', overwrite=False)
     add_synapse_model(Pyr2Pyr, overwrite=False)
     add_synapse_model(Pyr2Int, 'pyr2int', overwrite=False)
@@ -397,6 +520,8 @@ def load():
     add_synapse_model(Int2Pyr, overwrite=False)
     add_synapse_model(Int2Int, 'int2int', overwrite=False)
     add_synapse_model(Int2Int, overwrite=False)
+    add_synapse_model(Chn2Pyr, 'chn2pyr', overwrite=False)
+    add_synapse_model(Chn2Pyr, overwrite=False)
     return
 
 def syn_params_dicts(syn_dir='biophys_components/synaptic_models'):

@@ -5,7 +5,7 @@
 #SBATCH -A TG-DBS180005
 #SBATCH --job-name=full_build
 #SBATCH --output=full_build.out
-#SBATCH --time 0-05:30
+#SBATCH --time 0-01:00
 
 
 module purge
@@ -16,7 +16,6 @@ export PYTHONPATH=$HOME/nrn/lib/python:$PYTHONPATH
 export LD_LIBRARY_PATH=$HOME/nrn/x86_64/lib:$LD_LIBRARY_PATH
 export PATH=$HOME/nrn/x86_64/bin:$PATH
 
-rm PN_bg_spikes.h5
 rm -rf network/*
 
 echo "Building model at $(date)"

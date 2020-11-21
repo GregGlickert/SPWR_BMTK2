@@ -88,10 +88,6 @@ proc append_sections() { local i
 }
 
 
-external lambda_f
-proc set_nseg() {
-  	forsec all { nseg = int((L/(0.1*lambda_f(100))+.9)/2)*2 + 1  }
-}
 
 proc mechinit() {
 	//objref rv, rr
@@ -146,7 +142,8 @@ proc insert_mechs() {
 		
 		insert leakinter
 		glbar_inter_leakinter = 1/RmSoma
-		
+	
+		/*	
 		noiseRandObj_exc=new Random()
 		noiseRandObj_exc.Random123(r)   
     		noiseRandObj_exc.normal(0,1)
@@ -166,7 +163,7 @@ proc insert_mechs() {
     		noise_inh.g_i0 = 0.00573
     		noise_inh.std_i = 0.00264
     		noise_inh.setRandObj(noiseRandObj_inh)
-	
+		*/
 	}
 	
 	forsec dend_list{
@@ -198,6 +195,11 @@ proc set_chanparams() {
 		//cao_iconc_Ca = ca_outside
 		
 	}
+}
+
+external lambda_f
+proc set_nseg() {
+  	forsec all { nseg = int((L/(0.1*lambda_f(100))+.9)/2)*2 + 1  }
 }
 
 /*
