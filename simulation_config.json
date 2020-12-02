@@ -17,25 +17,6 @@
     "v_init": -80.0
   },
   "inputs": {
-    "current_clamp": {
-      "input_type": "current_clamp",
-      "module": "IClamp",
-      "node_set": "all",
-      "gids": [
-        8295
-      ],
-      "amp": [
-        0.5
-      ],
-      "delay": 1000.0,
-      "duration": 100.0
-    },
-    "mthalamus_spikes": {
-      "input_type": "spikes",
-      "module": "sonata",
-      "input_file": "$BASE_DIR/mthalamus_spikes.h5",
-      "node_set": "mthalamus"
-    },
     "exc_bg_bask_spikes": {
       "input_type": "spikes",
       "module": "sonata",

@@ -9,7 +9,7 @@ np.random.seed(123412)
 net = NetworkBuilder("SPWR_biophysical")
 
 # Create the possible x,y,z coordinates
-xside_length = 1400; yside_length = 1400; height = 200; min_dist = 20;
+xside_length = 700; yside_length = 1400; height = 200; min_dist = 20;
 x_grid = np.arange(0,xside_length+min_dist,min_dist)
 y_grid = np.arange(0,yside_length+min_dist,min_dist)
 z_grid = np.arange(0,height+min_dist,min_dist)
@@ -21,10 +21,10 @@ pos_list = np.vstack([xx.ravel(), yy.ravel(), zz.ravel()]).T
 #7 minutes with just delay
 #6 minutes just delay but no calculation
 #Number of cells in each population
-numPN_A = 4114#15930
-numPN_C = 4115#6210
-numBask = 1854#4860
-numAAC = 203
+numPN_A = 2057#15930
+numPN_C = 2057#6210
+numBask = 927#4860
+numAAC = 101
 # numPN_A = 20
 # numPN_C = 20
 # numBask = 10
@@ -46,11 +46,9 @@ pyra_pos = pos.copy()
 # Add a population of numPN_A nodes (all of which share model_type, dynamics_params, etc.)
 net.add_nodes(N=numPN_A, pop_name='PyrA',
               positions=positions_list(positions=pos),
-	      rotation_angle_zaxis=xiter_random(N=numPN_A, min_x=0.0, max_x=2*np.pi),
-	      rotation_angle_yaxis=xiter_random(N=numPN_A, min_x=0.0, max_x=2*np.pi),
               mem_potential='e',
               model_type='biophysical',
-              model_template='hoc:feng_typeA',
+              model_template='hoc:chandelierWB',
               morphology=None)
 
 ##################################################################################
@@ -68,11 +66,9 @@ pyrc_pos = pos.copy()
 # Add a population of numPN_A nodes (all of which share model_type, dynamics_params, etc.)
 net.add_nodes(N=numPN_C, pop_name='PyrC',
               positions=positions_list(positions=pos),
-	      rotation_angle_zaxis=xiter_random(N=numPN_C, min_x=0.0, max_x=2*np.pi),
-	      rotation_angle_yaxis=xiter_random(N=numPN_C, min_x=0.0, max_x=2*np.pi),
               mem_potential='e',
               model_type='biophysical',
-              model_template='hoc:feng_typeC',
+              model_template='hoc:chandelierWB',
               morphology=None)
 #################################################################################
 ############################# Chandelier ########################################
@@ -89,11 +85,9 @@ aac_pos = pos.copy()
 # Add a population of numAAC nodes
 net.add_nodes(N=numAAC, pop_name='AAC',
               positions=positions_list(positions=pos),
-	      rotation_angle_zaxis=xiter_random(N=numAAC, min_x=0.0, max_x=2*np.pi),
-	      rotation_angle_yaxis=xiter_random(N=numAAC, min_x=0.0, max_x=2*np.pi),
               mem_potential='e',
               model_type='biophysical',
-              model_template='hoc:basket',
+              model_template='hoc:chandelierWB',
               morphology=None)
 
 #################################################################################
@@ -209,6 +203,11 @@ def one_to_one(source, target):
 
     return tmp_nsyn
 
+def one_to_all(source, target):
+    
+    tmp_nsyn = 1
+
+    return tmp_nsyn
 
 def syn_dist_delay(source, target, min_delay):#, min_weight, max_weight):
 
@@ -231,27 +230,27 @@ def syn_delay(source, target, min_delay):
     #return [0.1]
 
 # Create connections between Pyr --> Pyr cells
-add_delays = []#Says whether the next add_edges should have delays added by distance.
-min_delays = []#Stores min_delay for each synapse type to be used later.
-
-dynamics_file = 'PN2PN.json'
-
-add_delays.append(True)
-min_delays.append(syn[dynamics_file]['delay'])
-
-conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': ['PyrA','PyrC']},
-              iterator = 'one_to_one',
-              connection_rule=dist_conn_perc,
-              connection_params={'min_dist':0.0,'max_dist':50.0,
-			         'min_syns':1,'max_syns':2,'A':0.01366,'B':0.008618},
-              syn_weight=1,
-	      delay=0.1,
-              dynamics_params=dynamics_file,
-              model_template=syn[dynamics_file]['level_of_detail'],
-              distance_range=[0.0, 300.0],
-              target_sections=['basal'],
-              sec_id=0,
-              sec_x=0.5)
+#add_delays = []#Says whether the next add_edges should have delays added by distance.
+#min_delays = []#Stores min_delay for each synapse type to be used later.
+#
+#dynamics_file = 'PN2PN.json'
+#
+#add_delays.append(True)
+#min_delays.append(syn[dynamics_file]['delay'])
+#
+#conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': ['PyrA','PyrC']},
+#              iterator = 'one_to_one',
+#              connection_rule=dist_conn_perc,
+#              connection_params={'min_dist':0.0,'max_dist':50.0,
+#			         'min_syns':1,'max_syns':2,'A':0.01366,'B':0.008618},
+#              syn_weight=1,
+#	      delay=0.1,
+#              dynamics_params=dynamics_file,
+#              model_template=syn[dynamics_file]['level_of_detail'],
+#              distance_range=[0.0, 300.0],
+#              target_sections=['basal'],
+#              sec_id=0,
+#              sec_x=0.5)
 
 # if add_properties:
 #     if do_pos:
@@ -265,24 +264,24 @@ conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': [
 #             rule_params={'min_delay':syn[dynamics_file]['delay']}, dtypes=[np.float])
 
 # Create connections between Pyr --> Bask cells
-dynamics_file = 'PN2INT.json'
-
-add_delays.append(True)
-min_delays.append(syn[dynamics_file]['delay'])
-
-conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': 'Bask'},
-              iterator = 'one_to_one',
-	      connection_rule=dist_conn_perc,
-              connection_params={'min_dist':0.0,'max_dist':50.0,
-			         'min_syns':1,'max_syns':2,'A':0.3217,'B':0.005002},
-              syn_weight=1,
-	      delay = 0.1,
-              dynamics_params=dynamics_file,
-              model_template=syn[dynamics_file]['level_of_detail'],
-              distance_range=[0.0, 300.0],
-              target_sections=['somatic'],
-              sec_id=0,
-              sec_x=0.5)
+#dynamics_file = 'PN2INT.json'
+#
+#add_delays.append(True)
+#min_delays.append(syn[dynamics_file]['delay'])
+#
+#conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': 'Bask'},
+#              iterator = 'one_to_one',
+#	      connection_rule=dist_conn_perc,
+#              connection_params={'min_dist':0.0,'max_dist':50.0,
+#			         'min_syns':1,'max_syns':2,'A':0.3217,'B':0.005002},
+#              syn_weight=1,
+#	      delay = 0.1,
+#              dynamics_params=dynamics_file,
+#              model_template=syn[dynamics_file]['level_of_detail'],
+#              distance_range=[0.0, 300.0],
+#              target_sections=['somatic'],
+#              sec_id=0,
+#              sec_x=0.5)
 
 # if add_properties:
 #     if do_pos:
@@ -298,44 +297,44 @@ conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': '
 
 
 # Create connections between Pyr --> AAC cells
-dynamics_file = 'PN2INT.json'
-
-add_delays.append(True)
-min_delays.append(syn[dynamics_file]['delay'])
-
-conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': 'AAC'},
-              iterator = 'one_to_one',
-	      connection_rule=dist_conn_perc,
-              connection_params={'min_dist':0.0,'max_dist':50.0,
-			         'min_syns':1,'max_syns':2,'A':0.3217,'B':0.005002},
-              syn_weight=1,
-	      delay = 0.1,
-              dynamics_params=dynamics_file,
-              model_template=syn[dynamics_file]['level_of_detail'],
-              distance_range=[0.0, 300.0],
-              target_sections=['somatic'],
-              sec_id=0,
-              sec_x=0.5)
+#dynamics_file = 'PN2INT.json'
+#
+#add_delays.append(True)
+#min_delays.append(syn[dynamics_file]['delay'])
+#
+#conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': 'AAC'},
+#              iterator = 'one_to_one',
+#	      connection_rule=dist_conn_perc,
+#              connection_params={'min_dist':0.0,'max_dist':50.0,
+#			         'min_syns':1,'max_syns':2,'A':0.3217,'B':0.005002},
+#              syn_weight=1,
+#	      delay = 0.1,
+#              dynamics_params=dynamics_file,
+#              model_template=syn[dynamics_file]['level_of_detail'],
+#              distance_range=[0.0, 300.0],
+#              target_sections=['somatic'],
+#              sec_id=0,
+#              sec_x=0.5)
 
 # Create connections between Bask --> Pyr cells
-dynamics_file = 'INT2PN.json'
-
-add_delays.append(True)
-min_delays.append(syn[dynamics_file]['delay'])
-
-conn = net.add_edges(source={'pop_name': 'Bask'}, target={'pop_name': ['PyrA','PyrC']},
-              iterator = 'one_to_one',
-              connection_rule=dist_conn_perc,
-              connection_params={'min_dist':0.0,'max_dist':100000.0,
-			     'min_syns':1,'max_syns':2,'A':0.313,'B':0.004029},
-              syn_weight=1,
-              delay=0.1,
-              dynamics_params='INT2PN.json',
-              model_template=syn['INT2PN.json']['level_of_detail'],
-              distance_range=[0.0, 300.0],
-              target_sections=['somatic'],
-              sec_id=0,
-              sec_x=0.5)
+#dynamics_file = 'INT2PN.json'
+#
+#add_delays.append(True)
+#min_delays.append(syn[dynamics_file]['delay'])
+#
+#conn = net.add_edges(source={'pop_name': 'Bask'}, target={'pop_name': ['PyrA','PyrC']},
+#              iterator = 'one_to_one',
+#              connection_rule=dist_conn_perc,
+#              connection_params={'min_dist':0.0,'max_dist':100000.0,
+#			     'min_syns':1,'max_syns':2,'A':0.313,'B':0.004029},
+#              syn_weight=1,
+#              delay=0.1,
+#              dynamics_params='INT2PN.json',
+#              model_template=syn['INT2PN.json']['level_of_detail'],
+#              distance_range=[0.0, 300.0],
+#              target_sections=['somatic'],
+#              sec_id=0,
+#              sec_x=0.5)
 
 # if add_properties:
 #     if do_pos:
@@ -352,46 +351,57 @@ conn = net.add_edges(source={'pop_name': 'Bask'}, target={'pop_name': ['PyrA','P
 
 
 # Create connections between AAC --> Pyr cells
-dynamics_file = 'CHN2PN.json'
+dynamics_file = 'PN2PN.json'
 
-add_delays.append(True)
-min_delays.append(syn[dynamics_file]['delay'])
+#add_delays.append(True)
+#min_delays.append(syn[dynamics_file]['delay'])
 
-conn = net.add_edges(source={'pop_name': 'AAC'}, target={'pop_name': ['PyrA','PyrC']},
-              iterator = 'one_to_one',
-              connection_rule=dist_conn_perc,
-              connection_params={'min_dist':0.0,'max_dist':100000.0,
-			     'min_syns':1,'max_syns':2,'A':0.313,'B':0.004029},
-              syn_weight=1,
-              delay=0.1,
-              dynamics_params='CHN2PN.json',
-              model_template=syn['CHN2PN.json']['level_of_detail'],
-              distance_range=[0.0, 300.0],
-              target_sections=['somatic'],
-              sec_id=0,
-              sec_x=0.5)
+conn = net.add_edges(source={'pop_name': 'AAC'}, target={'pop_name': 'PyrA'},
+	      connection_rule=dist_conn_perc,
+              connection_params={'min_dist':0.0,'max_dist':500.0,
+			         'min_syns':1,'max_syns':2,'A':0.3217,'B':0.005002},
+                   syn_weight=3.0e-04,
+                   weight_function='lognormal',
+                   weight_sigma=3.0e-04,
+                   target_sections=['somatic'],
+                   delay=0.1,
+                   distance_range=[0.0, 300.0],
+                   dynamics_params='AMPA_ExcToExc.json',
+                   model_template='exp2syn')
 
+conn = net.add_edges(source={'pop_name': 'AAC'}, target={'pop_name': 'PyrC'},
+	      connection_rule=dist_conn_perc,
+              connection_params={'min_dist':0.0,'max_dist':500.0,
+			         'min_syns':1,'max_syns':2,'A':0.3217,'B':0.005002},
+                   syn_weight=3.0e-04,
+                   weight_function='lognormal',
+                   weight_sigma=3.0e-04,
+                   target_sections=['somatic'],
+                   delay=0.1,
+                   distance_range=[0.0, 300.0],
+                   dynamics_params='AMPA_ExcToExc.json',
+                   model_template='exp2syn')
 # Create connections between Bask --> Bask cells
-dynamics_file = 'INT2INT.json'
+#dynamics_file = 'INT2INT.json'
 
-add_delays.append(True)
-min_delays.append(syn[dynamics_file]['delay'])
+#add_delays.append(True)
+#min_delays.append(syn[dynamics_file]['delay'])
 
-conn = net.add_edges(source={'pop_name': 'Bask'}, target={'pop_name': ['Bask']},
-              iterator = 'one_to_one',
-              connection_rule=dist_conn_perc,
-              connection_params={'min_dist':0.0,'max_dist':300.0,
-			     'min_syns':1,'max_syns':2,'A':0.24,'B':0.0},
-              syn_weight=5.0e-03,
-              weight_function='lognormal',
-              weight_sigma=1.0e-03,
-	      delay=0.1,
-              dynamics_params=dynamics_file,
-              model_template=syn[dynamics_file]['level_of_detail'],
-              distance_range=[0.0, 300.0],
-              target_sections=['somatic'],
-              sec_id=0,
-              sec_x=0.5)
+#conn = net.add_edges(source={'pop_name': 'Bask'}, target={'pop_name': ['Bask']},
+#              iterator = 'one_to_one',
+#              connection_rule=dist_conn_perc,
+#              connection_params={'min_dist':0.0,'max_dist':300.0,
+#			     'min_syns':1,'max_syns':2,'A':0.24,'B':0.0},
+#              syn_weight=5.0e-03,
+#              weight_function='lognormal',
+#              weight_sigma=1.0e-03,
+#	      delay=0.1,
+#              dynamics_params=dynamics_file,
+#              model_template=syn[dynamics_file]['level_of_detail'],
+#              distance_range=[0.0, 300.0],
+#              target_sections=['somatic'],
+#              sec_id=0,
+#              sec_x=0.5)
 
 # if add_properties:
 #     if do_pos:
@@ -404,8 +414,8 @@ conn = net.add_edges(source={'pop_name': 'Bask'}, target={'pop_name': ['Bask']},
 #         conn.add_properties(names=['delay'], rule=syn_delay, 
 #             rule_params={'min_delay':syn[dynamics_file]['delay']}, dtypes=[np.float])
 
-add_delays.append(False)
-min_delays.append(-1)#Want to append -1 if not adding delays.
+#add_delays.append(False)
+#min_delays.append(-1)#Want to append -1 if not adding delays.
 
 #conn = net.add_gap_junctions(source={'pop_name': ['Bask']}, 
 #		      target={'pop_name': ['Bask']},
@@ -429,7 +439,7 @@ net.add_edges(source=thalamus.nodes(), target=net.nodes(pop_name='PyrA'),
                    model_template='exp2syn')
 
 net.add_edges(source=thalamus.nodes(), target=net.nodes(pop_name='PyrC'),
-                   connection_rule=one_to_one,
+                   connection_rule=one_to_all,
                    syn_weight=1.0e-04,
                    weight_function='lognormal',
                    weight_sigma=1.0e-04,
@@ -438,24 +448,24 @@ net.add_edges(source=thalamus.nodes(), target=net.nodes(pop_name='PyrC'),
                    distance_range=[0.0, 300.0],
                    dynamics_params='AMPA_ExcToExc.json',
                    model_template='exp2syn')
-
-net.add_edges(source=exc_bg_bask.nodes(), target=net.nodes(pop_name='Bask'),
-                   connection_rule=one_to_one,
-                   syn_weight=1.0e-04,
-                   weight_function='lognormal',
-                   weight_sigma=1.0e-04,
-                   target_sections=['basal'],
-                   delay=0.1,
-                   distance_range=[0.0, 300.0],
-                   dynamics_params='AMPA_ExcToExc.json',
-                   model_template='exp2syn')
+#
+#net.add_edges(source=exc_bg_bask.nodes(), target=net.nodes(pop_name='Bask'),
+#                   connection_rule=one_to_all,
+#                   syn_weight=1.0e-04,
+#                   weight_function='lognormal',
+#                   weight_sigma=1.0e-04,
+#                   target_sections=['somatic'],
+#                   delay=0.1,
+#                   distance_range=[0.0, 300.0],
+#                   dynamics_params='AMPA_ExcToExc.json',
+#                   model_template='exp2syn')
 
 net.add_edges(source=exc_bg_chn.nodes(), target=net.nodes(pop_name='AAC'),
-                   connection_rule=one_to_one,
-                   syn_weight=1.0e-04,
+                   connection_rule=one_to_all,
+                   syn_weight=3.0e-04,
                    weight_function='lognormal',
-                   weight_sigma=1.0e-04,
-                   target_sections=['basal'],
+                   weight_sigma=3.0e-04,
+                   target_sections=['somatic'],
                    delay=0.1,
                    distance_range=[0.0, 300.0],
                    dynamics_params='AMPA_ExcToExc.json',
@@ -490,15 +500,8 @@ build_env_bionet(base_dir='./',
 		network_dir='./network',
 		tstop=t_sim, dt = 0.1,
 		report_vars = ['v'],
-		spikes_inputs=[('mthalamus', 'mthalamus_spikes.h5'),
-			       ('exc_bg_bask','exc_bg_bask_spikes.h5'),
+		spikes_inputs=[('exc_bg_bask','exc_bg_bask_spikes.h5'),
 			       ('exc_bg_chn','exc_bg_chn_spikes.h5')],
-		current_clamp={     
-                     'gids': [8295],
-                     'amp': [0.5], 
-                     'delay': 1000.0, 
-                     'duration': 100.0 
-                },
 		components_dir='biophys_components',
 		compile_mechanisms=True)
 
@@ -507,21 +510,21 @@ from bmtk.utils.reports.spike_trains import PoissonSpikeGenerator
 #
 psg = PoissonSpikeGenerator(population='mthalamus')
 psg.add(node_ids=range(numPN_A+numPN_C),  # Have nodes to match mthalamus
-        firing_rate=0.02,    # 15 Hz, we can also pass in a nonhomoegenous function/array
-        times=(0.0, t_sim))    # Firing starts at 0 s up to 3 s
+        firing_rate=0.2,    # 15 Hz, we can also pass in a nonhomoegenous function/array
+        times=(0.0, t_sim/1000))    # Firing starts at 0 s up to 3 s
 psg.to_sonata('mthalamus_spikes.h5')
 
 psg = PoissonSpikeGenerator(population='exc_bg_bask')
 psg.add(node_ids=range(numBask),  # Have nodes to match mthalamus
         firing_rate=0.2,    # 15 Hz, we can also pass in a nonhomoegenous function/array
-        times=(0.0, t_sim))    # Firing starts at 0 s up to 3 s
+        times=(0.0, t_sim/1000))    # Firing starts at 0 s up to 3 s
 psg.to_sonata('exc_bg_bask_spikes.h5')
 
 
 psg = PoissonSpikeGenerator(population='exc_bg_chn')
 psg.add(node_ids=range(numAAC),  # Have nodes to match mthalamus
         firing_rate=0.2,    # 15 Hz, we can also pass in a nonhomoegenous function/array
-        times=(0.0, t_sim))    # Firing starts at 0 s up to 3 s
+        times=(0.0, t_sim/1000))    # Firing starts at 0 s up to 3 s
 psg.to_sonata('exc_bg_chn_spikes.h5')
 
 def syn_dist_delay(source, target, min_delay, pos):
@@ -536,46 +539,46 @@ def syn_dist_delay(source, target, min_delay, pos):
     return float(min_delay) + distDelay
 
 
-import h5py
-import numpy as np
-f = h5py.File('network/SPWR_biophysical_SPWR_biophysical_edges.h5', 'r+')
-#import pdb; pdb.set_trace()
-edges = f['edges']['SPWR_biophysical_to_SPWR_biophysical']
-del edges['0']
-#f.move(edges.name+'/0', edges.name+'/1')
-edges.create_group('0')
-edges.create_group('1')
-del_group = edges['0']
-
-types = edges['edge_type_id'].value - 100
-sources = edges['source_node_id'].value
-targets = edges['target_node_id'].value
-group_id = []
-group_index = []
-delays = []
-num_no_d = 0
-num_d = 0 
-
-for i in range(len(sources)):
-    if add_delays[types[i]]:
-        delays.append(syn_dist_delay(sources[i], targets[i], min_delays[types[i]], nid_pos))
-        group_id.append(0)
-        group_index.append(num_d)
-        num_d += 1
-    else:
-        group_id.append(1)
-        group_index.append(num_no_d)
-        num_no_d += 1
-
-#delays = np.array([syn_dist_delay(sources[i], targets[i], types[i], dyns, nid_pos) for i in range(len(sources)) if types[i] != 104])
-# np.save("delays_test", np.array(delays))
-# np.save("gids_test", np.array(group_id))
-# np.save("index_test", np.array(group_index))
-edges['1'].create_dataset('nsyns', data=np.full(num_no_d, 1), dtype='uint16')
-
-del_group.create_dataset('delay', data=np.array(delays))
-#del_group.create_dataset('sec_x', data=np.full(len(delays), 0.9))
-#del_group.create_dataset('sec_id', data=np.full(len(delays), 0))
-edges['edge_group_id'][...] = np.array(group_id)
-edges['edge_group_index'][...] = np.array(group_index)
-f.close()
+#import h5py
+#import numpy as np
+#f = h5py.File('network/SPWR_biophysical_SPWR_biophysical_edges.h5', 'r+')
+##import pdb; pdb.set_trace()
+#edges = f['edges']['SPWR_biophysical_to_SPWR_biophysical']
+#del edges['0']
+##f.move(edges.name+'/0', edges.name+'/1')
+#edges.create_group('0')
+#edges.create_group('1')
+#del_group = edges['0']
+#
+#types = edges['edge_type_id'].value - 100
+#sources = edges['source_node_id'].value
+#targets = edges['target_node_id'].value
+#group_id = []
+#group_index = []
+#delays = []
+#num_no_d = 0
+#num_d = 0 
+#
+#for i in range(len(sources)):
+#    if add_delays[types[i]]:
+#        delays.append(syn_dist_delay(sources[i], targets[i], min_delays[types[i]], nid_pos))
+#        group_id.append(0)
+#        group_index.append(num_d)
+#        num_d += 1
+#    else:
+#        group_id.append(1)
+#        group_index.append(num_no_d)
+#        num_no_d += 1
+#
+##delays = np.array([syn_dist_delay(sources[i], targets[i], types[i], dyns, nid_pos) for i in range(len(sources)) if types[i] != 104])
+## np.save("delays_test", np.array(delays))
+## np.save("gids_test", np.array(group_id))
+## np.save("index_test", np.array(group_index))
+#edges['1'].create_dataset('nsyns', data=np.full(num_no_d, 1), dtype='uint16')
+#
+#del_group.create_dataset('delay', data=np.array(delays))
+##del_group.create_dataset('sec_x', data=np.full(len(delays), 0.9))
+##del_group.create_dataset('sec_id', data=np.full(len(delays), 0))
+#edges['edge_group_id'][...] = np.array(group_id)
+#edges['edge_group_index'][...] = np.array(group_index)
+#f.close()

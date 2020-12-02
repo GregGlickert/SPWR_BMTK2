@@ -5,13 +5,13 @@
     "$COMPONENTS_DIR": "$BASE_DIR/biophys_components"
   },
   "components": {
-    "morphologies_dir": "$COMPONENTS_DIR/morphologies",
-    "biophysical_neuron_models_dir": "$COMPONENTS_DIR/biophysical_neuron_models",
-    "point_neuron_models_dir": "$COMPONENTS_DIR/point_neuron_models",
-    "synaptic_models_dir": "$COMPONENTS_DIR/synaptic_models",
     "__pycache___dir": "$COMPONENTS_DIR/__pycache__",
+    "biophysical_neuron_models_dir": "$COMPONENTS_DIR/biophysical_neuron_models",
+    "synaptic_models_dir": "$COMPONENTS_DIR/synaptic_models",
     "templates_dir": "$COMPONENTS_DIR/templates",
-    "mechanisms_dir": "$COMPONENTS_DIR/mechanisms"
+    "point_neuron_models_dir": "$COMPONENTS_DIR/point_neuron_models",
+    "mechanisms_dir": "$COMPONENTS_DIR/mechanisms",
+    "morphologies_dir": "$COMPONENTS_DIR/morphologies"
   },
   "networks": {
     "nodes": [
@@ -36,10 +36,6 @@
       {
         "edges_file": "$NETWORK_DIR/SPWR_biophysical_SPWR_biophysical_edges.h5",
         "edge_types_file": "$NETWORK_DIR/SPWR_biophysical_SPWR_biophysical_edge_types.csv"
-      },
-      {
-        "edges_file": "$NETWORK_DIR/exc_bg_bask_SPWR_biophysical_edges.h5",
-        "edge_types_file": "$NETWORK_DIR/exc_bg_bask_SPWR_biophysical_edge_types.csv"
       },
       {
         "edge_types_file": "$NETWORK_DIR/exc_bg_chn_SPWR_biophysical_edge_types.csv",

@@ -30,6 +30,7 @@ objref noiseRandObj_exc, noiseRandObj_inh
 create soma[1]
 create dend[1]
 create apic[1]
+create axon[12]
 	
 proc init(){
 
@@ -59,6 +60,8 @@ proc init(){
 proc connect_sections() { local i
 	connect apic[0](0), soma[0](1)
 	connect dend[0](0), soma[0](0)
+	connect axon[0](0), soma[0](0.5)
+	for i=1,11{connect axon[i](0), axon[i-1](1)}
 }
 
 objref cclA, AMP, f
@@ -114,6 +117,27 @@ proc size_sections() {local thetaz
 			nseg = 8    
 		}
 
+		axon[0]{pt3dclear()
+			pt3dadd(-12.707*cos(thetaz),-12.707*sin(thetaz),0,6)
+			pt3dadd(-14.707*cos(thetaz),-14.707*sin(thetaz),0,5)
+			pt3dadd(-16.707*cos(thetaz),-16.707*sin(thetaz),0,4)
+			pt3dadd(-18.707*cos(thetaz),-18.707*sin(thetaz),0,3)
+			pt3dadd(-20.707*cos(thetaz),-20.707*sin(thetaz),0,2)
+			pt3dadd(-22.707*cos(thetaz),-22.707*sin(thetaz),0,1.3)
+			nseg = 10
+		}
+		
+		for i=2,11{
+			axon[i-1] {pt3dclear()
+				pt3dadd((-22.707-5*(i-1))*cos(thetaz),(-22.707-5*(i-1))*sin(thetaz),0, 1.22)
+				pt3dadd((-27.707-5*(i-1))*cos(thetaz),(-27.707-5*(i-1))*sin(thetaz),0, 1.22)
+			}
+		}
+
+		axon[11]{pt3dclear()
+			pt3dadd(-72.707*cos(thetaz),-72.707*sin(thetaz),0,1.22)
+			pt3dadd(-172.707*cos(thetaz),-172.707*sin(thetaz),0,1.22)
+		}
 
 }
 
@@ -124,17 +148,35 @@ proc append_sections() { local i
 
 	all = new SectionList()
 	somatic = new SectionList()
+	axonal = new SectionList()
 	basal = new SectionList()
 	apical = new SectionList()
 	
-	soma all.append()
-	soma somatic.append()
+	soma[0] all.append()
+	soma[0] somatic.append()
 	
 	dend[0] all.append()
 	dend[0] basal.append()
 	apic[0] all.append()
 	apic[0] apical.append()
 
+	axon[0] all.append()
+	axon[1] all.append()
+	axon[2] all.append()
+	axon[3] all.append()
+	axon[4] all.append()
+	
+	axon[5] all.append()
+	axon[6] all.append()
+	axon[7] all.append()
+	axon[8] all.append()
+	axon[9] all.append()
+	axon[10] all.append()
+	axon[11] all.append()
+
+	for i=0,11{	
+		axon[i] axonal.append()
+	}
 	//print "appended sections"
 
 }
@@ -173,6 +215,20 @@ proc mechinit() {
 
 		Ena = 45
 		Ek = -80
+		
+		// axon
+		gna12_ais_max = 0//3200   // Nav1.2 
+		gna16_ais_max = 3200   // Nav1.6
+		gna16_nakeaxon= 300    
+		gna12_myelin=20       // Nav1.2 at myelins
+		gna16_node = 3200     // Nav1.6 at node
+
+		gkv_axon = 1000
+
+	 	// Hu et al. half activation voltages
+		vhalf_na16 = -47
+		vhalf_na12 = -30
+		vhalf_na = -30
 }
 
 proc insert_mechs(){
@@ -255,6 +311,59 @@ proc insert_mechs(){
 
 		}
 
+		for i=0,10 axon[i] {
+			insert pas e_pas = Vrest  g_pas = gleak Ra=RaDend cm = Cm
+			insert na12
+			insert na16
+			insert kv
+			//gbar_cav31 = 0.008
+		}
+
+		axon[11]{
+			insert pas e_pas = Vrest  g_pas = gleak Ra=RaDend cm = Cm
+			insert na12
+			insert na16
+			insert kv
+		}
+
+		axon[0].gbar_na12 = gna12_ais_max*0.96*1
+		axon[1].gbar_na12 = gna12_ais_max*0.9*1                      
+		axon[2].gbar_na12 = gna12_ais_max*0.75*1                    
+		axon[3].gbar_na12 = gna12_ais_max*0.55*0.95              
+		axon[4].gbar_na12 = gna12_ais_max*0.366985879*0.880142857  
+		axon[5].gbar_na12 = gna12_ais_max*0.2*0.75                 
+		axon[6].gbar_na12 = gna12_ais_max*0.100330761*0.647857143  
+		axon[7].gbar_na12 = gna12_ais_max*0.011532125*0.520285714 
+		axon[8].gbar_na12 = gna12_ais_max*0*0.428571429            
+		axon[9].gbar_na12 = gna12_ais_max*0*0.342857143 
+		axon[10].gbar_na12 = gna12_ais_max*0*0.342857143 
+		axon[11].gbar_na12 = gna12_ais_max*0*0.342857143 	
+		
+		axon[0].gbar_na16 = gna16_ais_max	*	0.04	*	1   
+		axon[1].gbar_na16 = gna16_ais_max	*	0.1	*	1   
+		axon[2].gbar_na16 = gna16_ais_max	*	0.25	*	1   
+		axon[3].gbar_na16 = gna16_ais_max	*	0.45	*	0.95   
+		axon[4].gbar_na16 = gna16_ais_max	*	0.633014121	*	0.880142857   
+		axon[5].gbar_na16 = gna16_ais_max	*	0.8	*	0.75   
+		axon[6].gbar_na16 = gna16_ais_max	*	0.899669239	*	0.647857143   
+		axon[7].gbar_na16 = gna16_ais_max	*	0.988467875	*	0.520285714   
+		axon[8].gbar_na16 = gna16_ais_max	*	1	*	0.428571429   
+		axon[9].gbar_na16 = gna16_ais_max	*	1	*	0.342857143  
+		axon[10].gbar_na16 = gna16_ais_max	*	1	*	0.342857143  
+						
+		axon[11].gbar_na16 = gna16_ais_max	*	1	*	0.342857143  
+		axon[0].gbar_kv = gkv_axon	*	0.2 
+		axon[1].gbar_kv = gkv_axon	*	0.3 
+		axon[2].gbar_kv = gkv_axon	*	0.4 
+		axon[3].gbar_kv = gkv_axon	*	0.5 
+		axon[4].gbar_kv = gkv_axon	*	0.6 
+		axon[5].gbar_kv = gkv_axon	*	0.7 
+		axon[6].gbar_kv = gkv_axon	*	0.8 
+		axon[7].gbar_kv = gkv_axon	*	0.9
+		axon[8].gbar_kv = gkv_axon	*	1
+		axon[9].gbar_kv = gkv_axon	*	1
+		axon[10].gbar_kv = gkv_axon	*	1
+		axon[11].gbar_kv = gkv_axon	*	1
 
 		
 }	

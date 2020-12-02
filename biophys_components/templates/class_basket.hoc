@@ -4,7 +4,7 @@ public init, connect_sections, size_sections, append_sections, define_synapses
 public mechinit, insert_mechs, set_biophys, get_root
 public  pre_list, connect_pre, is_art, is_connected, gid, randi
 public soma, dend
-public all, basal_list, apical_list, soma_list, dendrite_list
+public all, basal_list, apical_list, somatic, dendrite_list
 public x, y, z, position, myroot, myrootsec, Vrest
 public NumSoma, NumApical, NumBasal, NumAxon, NumDend
 public gna12_ais_max, gna16_ais_max, gkv_axon, gNav_soma, gKdr_soma, gKdr_dend, gNav_dend
@@ -71,16 +71,16 @@ proc size_sections(){
 	}
 }
 
-objref all, dend_list, soma_list
+objref all, dend_list, somatic
 proc append_sections() { local i
 	
-	objref all, soma_list, dend_list
+	objref all, somatic, dend_list
 	all = new SectionList()
     soma[0] all.append()
     dend[0] all.append()
 
-	soma_list = new SectionList()
-    soma[0] soma_list.append()
+	somatic = new SectionList()
+    soma[0] somatic.append()
 
 	dend_list = new SectionList()
     dend[0] dend_list.append()
@@ -130,7 +130,7 @@ proc mechinit() {
 proc insert_mechs() {
 
         r = $1
-	forsec soma_list {
+	forsec somatic {
 		Ra = RaSoma
 		cm = CmSoma
 		
