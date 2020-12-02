@@ -439,7 +439,7 @@ net.add_edges(source=thalamus.nodes(), target=net.nodes(pop_name='PyrA'),
                    model_template='exp2syn')
 
 net.add_edges(source=thalamus.nodes(), target=net.nodes(pop_name='PyrC'),
-                   connection_rule=one_to_all,
+                   connection_rule=one_to_one,
                    syn_weight=1.0e-04,
                    weight_function='lognormal',
                    weight_sigma=1.0e-04,
