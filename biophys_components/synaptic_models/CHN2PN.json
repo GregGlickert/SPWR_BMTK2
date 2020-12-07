@@ -4,7 +4,7 @@
     "Beta_gaba": "0.14",
     "Cdur_gaba": "0.7254",
     "gbar_gaba": "0.006",
-    "Erev_gaba": "-50",
+    "Erev_gaba": "0",
     "initW": "1",
     "Wmax": "3",
     "Wmin": "0.25",

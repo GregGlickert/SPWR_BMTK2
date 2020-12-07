@@ -33,9 +33,9 @@ def run(config_file):
     graph = bionet.BioNetwork.from_config(conf)
 
     # This fixes the morphology error in LFP calculation
-    #pop = graph._node_populations['SPWR_biophysical']
-    #for node in pop.get_nodes():
-    #    node._node._node_type_props['morphology'] = node.model_template[1]
+    pop = graph._node_populations['SPWR_biophysical']
+    for node in pop.get_nodes():
+        node._node._node_type_props['morphology'] = node.model_template[1]
 
     sim = bionet.BioSimulator.from_config(conf, network=graph)
     
