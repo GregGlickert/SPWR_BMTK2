@@ -1,4 +1,4 @@
-Running model at Sat Dec  5 15:11:19 PST 2020
+Running model at Sun Dec 13 06:28:16 PST 2020
 numprocs=200
 NEURON -- VERSION 7.7.2 7.7 (2b7985ba) 2019-06-20
 Duke, Yale, and the BlueBrain Project -- Copyright 1984-2018
@@ -14,36 +14,66 @@ create child processes) is strongly discouraged.
 
 The process that invoked fork was:
 
-  Local host:          [[41293,1],12] (PID 4719)
+  Local host:          [[39816,1],115] (PID 1533)
 
 If you are *absolutely sure* that your application will successfully
 and correctly survive a call to fork(), you may disable this warning
 by setting the mpi_warn_on_fork MCA parameter to 0.
 --------------------------------------------------------------------------
-2020-12-05 15:11:35,885 [INFO] Created log file
-2020-12-05 15:11:35,888 [INFO] Running NEURON with mpi (200 cores).
+2020-12-13 06:28:22,248 [INFO] Created log file
+2020-12-13 06:28:22,250 [INFO] Running NEURON with mpi (200 cores).
 Additional mechanisms from files
  modfiles/bg2pyr.mod modfiles/cad.mod modfiles/CaDynamics.mod modfiles/cadyn.mod modfiles/Ca_HVA.mod modfiles/Ca_LVA.mod modfiles/ca.mod modfiles/capool.mod modfiles/cav31.mod modfiles/chn2pyr.mod modfiles/gabaa.mod modfiles/gap.mod modfiles/Gfluct_new_exc.mod modfiles/Gfluct_new_inh.mod modfiles/h.mod modfiles/Ih.mod modfiles/im.mod modfiles/Im.mod modfiles/Im_v2.mod modfiles/int2int.mod modfiles/int2pyr.mod modfiles/kaprox.mod modfiles/kca.mod modfiles/Kd.mod modfiles/kdrca1.mod modfiles/kdrinter.mod modfiles/kdrinter_WB.mod modfiles/km.mod modfiles/K_P.mod modfiles/K_T.mod modfiles/Kv2like.mod modfiles/Kv3_1.mod modfiles/kv.mod modfiles/leakinter.mod modfiles/leak.mod modfiles/MyExp2Sid.mod modfiles/na12.mod modfiles/na16.mod modfiles/na3.mod modfiles/nainter.mod modfiles/nainter_WB.mod modfiles/na.mod modfiles/nap.mod modfiles/Nap.mod modfiles/NaTa.mod modfiles/NaTs.mod modfiles/NaV.mod modfiles/pyr2int.mod modfiles/pyr2pyr.mod modfiles/sahp.mod modfiles/SK.mod modfiles/vecevent.mod
-[comet-23-41.sdsc.edu:04669] 199 more processes have sent help message help-opal-runtime.txt / opal_init:warn-fork
-[comet-23-41.sdsc.edu:04669] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
-2020-12-05 15:11:39,570 [INFO] Building cells.
-2020-12-05 15:11:40,181 [INFO] Building recurrent connections
-2020-12-05 15:11:40,803 [INFO] Building virtual cell stimulations for mthalamus_spikes
-2020-12-05 15:12:05,266 [INFO] Building virtual cell stimulations for exc_bg_bask_spikes
-2020-12-05 15:12:05,398 [INFO] Building virtual cell stimulations for exc_bg_chn_spikes
-2020-12-05 15:12:12,229 [INFO] Running simulation for 5000.000 ms with the time step 0.100 ms
-2020-12-05 15:12:12,229 [INFO] Starting timestep: 0 at t_sim: 0.000 ms
-2020-12-05 15:12:12,229 [INFO] Block save every 5000 steps
-2020-12-05 15:12:49,939 [INFO]     step:5000 t_sim:500.00 ms
-2020-12-05 15:13:28,080 [INFO]     step:10000 t_sim:1000.00 ms
-2020-12-05 15:14:05,885 [INFO]     step:15000 t_sim:1500.00 ms
-2020-12-05 15:14:43,845 [INFO]     step:20000 t_sim:2000.00 ms
-2020-12-05 15:15:21,492 [INFO]     step:25000 t_sim:2500.00 ms
-2020-12-05 15:15:58,472 [INFO]     step:30000 t_sim:3000.00 ms
-2020-12-05 15:16:35,874 [INFO]     step:35000 t_sim:3500.00 ms
-2020-12-05 15:17:13,075 [INFO]     step:40000 t_sim:4000.00 ms
-2020-12-05 15:17:50,469 [INFO]     step:45000 t_sim:4500.00 ms
-2020-12-05 15:18:27,927 [INFO]     step:50000 t_sim:5000.00 ms
+[comet-12-03.sdsc.edu:20441] 199 more processes have sent help message help-opal-runtime.txt / opal_init:warn-fork
+[comet-12-03.sdsc.edu:20441] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+2020-12-13 06:28:26,665 [INFO] Building cells.
+2020-12-13 06:28:27,357 [INFO] Building recurrent connections
+2020-12-13 06:28:27,895 [INFO] Building virtual cell stimulations for mthalamus_spikes
+2020-12-13 06:28:55,341 [INFO] Building virtual cell stimulations for exc_bg_bask_spikes
+2020-12-13 06:28:55,855 [INFO] Building virtual cell stimulations for exc_bg_chn_spikes
+2020-12-13 06:28:56,338 [INFO] Running simulation for 20000.000 ms with the time step 0.100 ms
+2020-12-13 06:28:56,338 [INFO] Starting timestep: 0 at t_sim: 0.000 ms
+2020-12-13 06:28:56,338 [INFO] Block save every 5000 steps
+2020-12-13 06:29:20,031 [INFO]     step:5000 t_sim:500.00 ms
+2020-12-13 06:29:43,364 [INFO]     step:10000 t_sim:1000.00 ms
+2020-12-13 06:30:06,956 [INFO]     step:15000 t_sim:1500.00 ms
+2020-12-13 06:30:30,273 [INFO]     step:20000 t_sim:2000.00 ms
+2020-12-13 06:30:53,688 [INFO]     step:25000 t_sim:2500.00 ms
+2020-12-13 06:31:17,114 [INFO]     step:30000 t_sim:3000.00 ms
+2020-12-13 06:31:40,373 [INFO]     step:35000 t_sim:3500.00 ms
+2020-12-13 06:32:03,939 [INFO]     step:40000 t_sim:4000.00 ms
+2020-12-13 06:32:27,269 [INFO]     step:45000 t_sim:4500.00 ms
+2020-12-13 06:32:50,664 [INFO]     step:50000 t_sim:5000.00 ms
+2020-12-13 06:33:14,145 [INFO]     step:55000 t_sim:5500.00 ms
+2020-12-13 06:33:37,400 [INFO]     step:60000 t_sim:6000.00 ms
+2020-12-13 06:34:00,915 [INFO]     step:65000 t_sim:6500.00 ms
+2020-12-13 06:34:24,293 [INFO]     step:70000 t_sim:7000.00 ms
+2020-12-13 06:34:47,597 [INFO]     step:75000 t_sim:7500.00 ms
+2020-12-13 06:35:11,189 [INFO]     step:80000 t_sim:8000.00 ms
+2020-12-13 06:35:34,444 [INFO]     step:85000 t_sim:8500.00 ms
+2020-12-13 06:35:57,947 [INFO]     step:90000 t_sim:9000.00 ms
+2020-12-13 06:36:21,356 [INFO]     step:95000 t_sim:9500.00 ms
+2020-12-13 06:36:44,643 [INFO]     step:100000 t_sim:10000.00 ms
+2020-12-13 06:37:08,197 [INFO]     step:105000 t_sim:10500.00 ms
+2020-12-13 06:37:31,486 [INFO]     step:110000 t_sim:11000.00 ms
+2020-12-13 06:37:54,931 [INFO]     step:115000 t_sim:11500.00 ms
+2020-12-13 06:38:18,386 [INFO]     step:120000 t_sim:12000.00 ms
+2020-12-13 06:38:41,630 [INFO]     step:125000 t_sim:12500.00 ms
+2020-12-13 06:39:05,227 [INFO]     step:130000 t_sim:13000.00 ms
+2020-12-13 06:39:28,530 [INFO]     step:135000 t_sim:13500.00 ms
+2020-12-13 06:39:51,937 [INFO]     step:140000 t_sim:14000.00 ms
+2020-12-13 06:40:15,403 [INFO]     step:145000 t_sim:14500.00 ms
+2020-12-13 06:40:38,637 [INFO]     step:150000 t_sim:15000.00 ms
+2020-12-13 06:41:02,183 [INFO]     step:155000 t_sim:15500.00 ms
+2020-12-13 06:41:25,525 [INFO]     step:160000 t_sim:16000.00 ms
+2020-12-13 06:41:48,800 [INFO]     step:165000 t_sim:16500.00 ms
+2020-12-13 06:42:12,426 [INFO]     step:170000 t_sim:17000.00 ms
+2020-12-13 06:42:35,651 [INFO]     step:175000 t_sim:17500.00 ms
+2020-12-13 06:42:59,137 [INFO]     step:180000 t_sim:18000.00 ms
+2020-12-13 06:43:22,523 [INFO]     step:185000 t_sim:18500.00 ms
+2020-12-13 06:43:45,793 [INFO]     step:190000 t_sim:19000.00 ms
+2020-12-13 06:44:09,342 [INFO]     step:195000 t_sim:19500.00 ms
+2020-12-13 06:44:32,591 [INFO]     step:200000 t_sim:20000.00 ms
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
@@ -52,7 +82,7 @@ Additional mechanisms from files
   from ._conv import register_converters as _register_converters
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
-2020-12-05 15:18:34,692 [INFO] Simulation completed in 6.0 minutes, 22.46 seconds 
+2020-12-13 06:44:43,895 [INFO] Simulation completed in 15.0 minutes, 47.61 seconds 
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
@@ -75,8 +105,6 @@ Additional mechanisms from files
   from ._conv import register_converters as _register_converters
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
-/home/latimerb/.local/lib/python3.6/site-packages/bmtk-0.0.8-py3.6.egg/bmtk/simulator/bionet/modules/ecp.py:287: RuntimeWarning: divide by zero encountered in true_divide
-  tr[j, :] = np.log(num / den) / dlmag  # units of (um) use with im_ (total seg current)
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
@@ -145,10 +173,6 @@ Additional mechanisms from files
   from ._conv import register_converters as _register_converters
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
-/home/latimerb/.local/lib/python3.6/site-packages/bmtk-0.0.8-py3.6.egg/bmtk/simulator/bionet/modules/ecp.py:287: RuntimeWarning: divide by zero encountered in true_divide
-  tr[j, :] = np.log(num / den) / dlmag  # units of (um) use with im_ (total seg current)
-/home/latimerb/.local/lib/python3.6/site-packages/bmtk-0.0.8-py3.6.egg/bmtk/simulator/bionet/modules/ecp.py:158: RuntimeWarning: invalid value encountered in add
-  ecp_f5['/ecp/data'][ivals[i]:ivals[i+1], :] += self._tmp_ecp_handle['/ecp/data'][ivals[i]:ivals[i+1], :]
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
@@ -201,10 +225,6 @@ Additional mechanisms from files
   from ._conv import register_converters as _register_converters
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
-/home/latimerb/.local/lib/python3.6/site-packages/bmtk-0.0.8-py3.6.egg/bmtk/simulator/bionet/modules/ecp.py:287: RuntimeWarning: divide by zero encountered in true_divide
-  tr[j, :] = np.log(num / den) / dlmag  # units of (um) use with im_ (total seg current)
-/home/latimerb/.local/lib/python3.6/site-packages/bmtk-0.0.8-py3.6.egg/bmtk/simulator/bionet/modules/ecp.py:158: RuntimeWarning: invalid value encountered in add
-  ecp_f5['/ecp/data'][ivals[i]:ivals[i+1], :] += self._tmp_ecp_handle['/ecp/data'][ivals[i]:ivals[i+1], :]
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
@@ -223,10 +243,6 @@ Additional mechanisms from files
   from ._conv import register_converters as _register_converters
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
-/home/latimerb/.local/lib/python3.6/site-packages/bmtk-0.0.8-py3.6.egg/bmtk/simulator/bionet/modules/ecp.py:287: RuntimeWarning: divide by zero encountered in true_divide
-  tr[j, :] = np.log(num / den) / dlmag  # units of (um) use with im_ (total seg current)
-/home/latimerb/.local/lib/python3.6/site-packages/bmtk-0.0.8-py3.6.egg/bmtk/simulator/bionet/modules/ecp.py:158: RuntimeWarning: invalid value encountered in add
-  ecp_f5['/ecp/data'][ivals[i]:ivals[i+1], :] += self._tmp_ecp_handle['/ecp/data'][ivals[i]:ivals[i+1], :]
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
@@ -281,10 +297,6 @@ Additional mechanisms from files
   from ._conv import register_converters as _register_converters
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
-/home/latimerb/.local/lib/python3.6/site-packages/bmtk-0.0.8-py3.6.egg/bmtk/simulator/bionet/modules/ecp.py:287: RuntimeWarning: divide by zero encountered in true_divide
-  tr[j, :] = np.log(num / den) / dlmag  # units of (um) use with im_ (total seg current)
-/home/latimerb/.local/lib/python3.6/site-packages/bmtk-0.0.8-py3.6.egg/bmtk/simulator/bionet/modules/ecp.py:158: RuntimeWarning: invalid value encountered in add
-  ecp_f5['/ecp/data'][ivals[i]:ivals[i+1], :] += self._tmp_ecp_handle['/ecp/data'][ivals[i]:ivals[i+1], :]
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
@@ -464,8 +476,8 @@ Additional mechanisms from files
 /home/latimerb/.local/lib/python3.6/site-packages/h5py/__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
   from ._conv import register_converters as _register_converters
 --------------------------------------------------------------------------
-orterun has exited due to process rank 5 with PID 0 on
-node comet-23-41 exiting improperly. There are three reasons this could occur:
+orterun has exited due to process rank 148 with PID 31692 on
+node comet-12-11 exiting improperly. There are three reasons this could occur:
 
 1. this process did not call "init" before exiting, but others in
 the job did. This can cause a job to hang indefinitely while it waits
@@ -486,4 +498,4 @@ terminated by signals sent by orterun (as reported here).
 
 You can avoid this message by specifying -quiet on the orterun command line.
 --------------------------------------------------------------------------
-Done running model at Sat Dec  5 15:18:35 PST 2020
+Done running model at Sun Dec 13 06:44:44 PST 2020

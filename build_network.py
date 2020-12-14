@@ -506,14 +506,20 @@ exc_bg_chn.build()
 exc_bg_chn.save_nodes(output_dir='network')
 #
 #print("External nodes and edges built")
-t_sim = 5000
+t_sim = 20000
 
 from bmtk.utils.sim_setup import build_env_bionet
 
 build_env_bionet(base_dir='./',
 		network_dir='./network',
 		tstop=t_sim, dt = 0.1,
-		report_vars = ['v'],
+		clamp_reports=['se'],#Records se clamp currents.
+                se_voltage_clamp={
+                     "amps":[[-70, -70, -70]],
+                     "durations": [[t_sim, t_sim, t_sim]],
+                     'gids': [5142],
+                     'rs': [0.01],
+                },
 		spikes_inputs=[('mthalamus','mthalamus_spikes.h5'),
 			       ('exc_bg_bask','exc_bg_bask_spikes.h5'),
 			       ('exc_bg_chn','exc_bg_chn_spikes.h5')],
@@ -525,21 +531,21 @@ from bmtk.utils.reports.spike_trains import PoissonSpikeGenerator
 #
 psg = PoissonSpikeGenerator(population='mthalamus')
 psg.add(node_ids=range(numPN_A+numPN_C),  # Have nodes to match mthalamus
-        firing_rate=0.2,    # 15 Hz, we can also pass in a nonhomoegenous function/array
-        times=(0.0, t_sim/1000))    # Firing starts at 0 s up to 3 s
+        firing_rate=0.2/1000,    # 15 Hz, we can also pass in a nonhomoegenous function/array
+        times=(0.0, t_sim))    # Firing starts at 0 s up to 3 s
 psg.to_sonata('mthalamus_spikes.h5')
 
 psg = PoissonSpikeGenerator(population='exc_bg_bask')
 psg.add(node_ids=range(numBask),  # Have nodes to match mthalamus
-        firing_rate=0.2,    # 15 Hz, we can also pass in a nonhomoegenous function/array
-        times=(0.0, t_sim/1000))    # Firing starts at 0 s up to 3 s
+        firing_rate=0.2/1000,    # 15 Hz, we can also pass in a nonhomoegenous function/array
+        times=(0.0, t_sim))    # Firing starts at 0 s up to 3 s
 psg.to_sonata('exc_bg_bask_spikes.h5')
 
 
 psg = PoissonSpikeGenerator(population='exc_bg_chn')
 psg.add(node_ids=range(numAAC),  # Have nodes to match mthalamus
-        firing_rate=0.2,    # 15 Hz, we can also pass in a nonhomoegenous function/array
-        times=(0.0, t_sim/1000))    # Firing starts at 0 s up to 3 s
+        firing_rate=0.2/1000,    # 15 Hz, we can also pass in a nonhomoegenous function/array
+        times=(0.0, t_sim))    # Firing starts at 0 s up to 3 s
 psg.to_sonata('exc_bg_chn_spikes.h5')
 
 def syn_dist_delay(source, target, min_delay, pos):
