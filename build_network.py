@@ -517,7 +517,7 @@ build_env_bionet(base_dir='./',
                 se_voltage_clamp={
                      "amps":[[-70, -70, -70]],
                      "durations": [[t_sim, t_sim, t_sim]],
-                     'gids': [5050],
+                     'gids': [4162],
                      'rs': [0.01],
                 },
 		spikes_inputs=[('mthalamus','mthalamus_spikes.h5'),
