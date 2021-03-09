@@ -17,31 +17,6 @@
     "v_init": -80.0
   },
   "inputs": {
-    "se_voltage_clamp": {
-      "input_type": "voltage_clamp",
-      "module": "SEClamp",
-      "node_set": "all",
-      "gids": [
-        4164
-      ],
-      "amps": [
-        [
-          -70,
-          -70,
-          -70
-        ]
-      ],
-      "durations": [
-        [
-          20000,
-          20000,
-          20000
-        ]
-      ],
-      "rs": [
-        0.01
-      ]
-    },
     "mthalamus_spikes": {
       "input_type": "spikes",
       "module": "sonata",
