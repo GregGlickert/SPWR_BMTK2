@@ -9,7 +9,7 @@ np.random.seed(123412)
 net = NetworkBuilder("SPWR_biophysical")
 
 # Create the possible x,y,z coordinates
-xside_length = 700; yside_length = 1400; height = 200; min_dist = 20;
+xside_length = 1400; yside_length = 1400; height = 400; min_dist = 20; # was x = 700 height = 200
 x_grid = np.arange(0,xside_length+min_dist,min_dist)
 y_grid = np.arange(0,yside_length+min_dist,min_dist)
 z_grid = np.arange(0,height+min_dist,min_dist)
@@ -21,10 +21,10 @@ pos_list = np.vstack([xx.ravel(), yy.ravel(), zz.ravel()]).T
 #7 minutes with just delay
 #6 minutes just delay but no calculation
 #Number of cells in each population
-numPN_A = 2057#15930
-numPN_C = 2057#6210
-numBask = 927#4860
-numAAC = 101
+numPN_A = 8229#15930  was 2057
+numPN_C = 8229#6210   was 2057
+numBask = 3708#4860    was 927
+numAAC = 406         #was 101
 # numPN_A = 20
 # numPN_C = 20
 # numBask = 10
