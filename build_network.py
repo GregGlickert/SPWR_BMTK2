@@ -21,10 +21,10 @@ pos_list = np.vstack([xx.ravel(), yy.ravel(), zz.ravel()]).T
 #7 minutes with just delay
 #6 minutes just delay but no calculation
 #Number of cells in each population
-numPN_A = 8229#15930  was 2057
-numPN_C = 8229#6210   was 2057
-numBask = 3708#4860    was 927
-numAAC = 406         #was 101
+numPN_A = 2057#15930  was 2057  8229
+numPN_C = 2057#6210   was 2057  8229
+numBask = 927#4860    was 927  3708
+numAAC = 101         #was 101   406
 # numPN_A = 20
 # numPN_C = 20
 # numBask = 10
@@ -274,24 +274,25 @@ def syn_delay(source, target, min_delay):
 #             rule_params={'min_delay':syn[dynamics_file]['delay']}, dtypes=[np.float])
 
 # Create connections between Pyr --> Bask cells
-#dynamics_file = 'PN2INT.json'
+dynamics_file = 'PN2INT.json'
 #
 #add_delays.append(True)
 #min_delays.append(syn[dynamics_file]['delay'])
 #
-#conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': 'Bask'},
-#              iterator = 'one_to_one',
-#	      connection_rule=dist_conn_perc,
-#              connection_params={'min_dist':0.0,'max_dist':50.0,
-#			         'min_syns':1,'max_syns':2,'A':0.3217,'B':0.005002},
-#              syn_weight=1,
-#	      delay = 0.1,
-#              dynamics_params=dynamics_file,
-#              model_template=syn[dynamics_file]['level_of_detail'],
-#              distance_range=[0.0, 300.0],
-#              target_sections=['somatic'],
-#              sec_id=0,
-#              sec_x=0.5)
+# NEW
+conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': 'Bask'},
+              iterator = 'one_to_one',
+	      connection_rule=dist_conn_perc,
+              connection_params={'min_dist':0.0,'max_dist':50.0,
+			         'min_syns':1,'max_syns':2,'A':0.3217,'B':0.005002},
+              syn_weight=1,
+	      delay = 0.1,
+              dynamics_params=dynamics_file,
+              model_template=syn[dynamics_file]['level_of_detail'],
+              distance_range=[0.0, 300.0],
+              target_sections=['somatic'],
+              sec_id=0,
+              sec_x=0.5)
 
 # if add_properties:
 #     if do_pos:
@@ -331,20 +332,35 @@ conn = net.add_edges(source={'pop_name': ['PyrA','PyrC']}, target={'pop_name': '
 #
 #add_delays.append(True)
 #min_delays.append(syn[dynamics_file]['delay'])
-#
-#conn = net.add_edges(source={'pop_name': 'Bask'}, target={'pop_name': ['PyrA','PyrC']},
-#              iterator = 'one_to_one',
-#              connection_rule=dist_conn_perc,
-#              connection_params={'min_dist':0.0,'max_dist':100000.0,
-#			     'min_syns':1,'max_syns':2,'A':0.313,'B':0.004029},
-#              syn_weight=1,
-#              delay=0.1,
-#              dynamics_params='INT2PN.json',
-#              model_template=syn['INT2PN.json']['level_of_detail'],
-#              distance_range=[0.0, 300.0],
-#              target_sections=['somatic'],
-#              sec_id=0,
-#              sec_x=0.5)
+# ALSO NEW
+conn = net.add_edges(source={'pop_name': 'Bask'}, target={'pop_name': ['PyrA','PyrC']},
+              iterator = 'one_to_one',
+              connection_rule=dist_conn_perc,
+              connection_params={'min_dist':0.0,'max_dist':100000.0,
+			     'min_syns':1,'max_syns':2,'A':0.313,'B':0.004029},
+              syn_weight=1,
+              delay=0.1,
+              dynamics_params='INT2PN.json',
+              model_template=syn['INT2PN.json']['level_of_detail'],
+              distance_range=[0.0, 300.0],
+              target_sections=['somatic'],
+              sec_id=0,
+              sec_x=0.5)
+
+# ADDED THIS NO CLUE IF THIS IS RIGHT
+conn = net.add_edges(source={'pop_name': 'Bask'}, target={'pop_name': 'AAC'},
+              iterator = 'one_to_one',
+              connection_rule=dist_conn_perc,
+              connection_params={'min_dist':0.0,'max_dist':100000.0,
+                 'min_syns':1,'max_syns':2,'A':0.313,'B':0.004029},
+              syn_weight=1,
+              delay=0.1,
+              dynamics_params='INT2PN.json',
+              model_template=syn['INT2PN.json']['level_of_detail'],
+              distance_range=[0.0, 300.0],
+              target_sections=['somatic'],
+              sec_id=0,
+              sec_x=0.5)
 
 # if add_properties:
 #     if do_pos:
