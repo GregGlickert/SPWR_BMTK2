@@ -289,7 +289,7 @@ dynamics_file = 'PN2INT.json'
 # add_delays.append(True)
 # min_delays.append(syn[dynamics_file]['delay'])
 #
-# NEW
+#
 conn = net.add_edges(source={'pop_name': ['PyrA', 'PyrC']}, target={'pop_name': 'Bask'},
                      iterator='one_to_one',
                      connection_rule=dist_conn_perc,
@@ -330,7 +330,7 @@ conn = net.add_edges(source={'pop_name': ['PyrA', 'PyrC']}, target={'pop_name': 
                      syn_weight=1,
                      delay=0.1,
                      dynamics_params=dynamics_file,
-                     model_template=syn[dynamics_file]['level_of_detail'],
+                     model_template=syn['PN2INT.json']['level_of_detail'],
                      distance_range=[0.0, 300.0],
                      target_sections=['somatic'],
                      sec_id=0,
@@ -341,7 +341,7 @@ dynamics_file = 'INT2PN.json'
 #
 # add_delays.append(True)
 # min_delays.append(syn[dynamics_file]['delay'])
-# ALSO NEW
+#
 conn = net.add_edges(source={'pop_name': 'Bask'}, target={'pop_name': ['PyrA', 'PyrC']},
                      iterator='one_to_one',
                      connection_rule=dist_conn_perc,
@@ -356,7 +356,7 @@ conn = net.add_edges(source={'pop_name': 'Bask'}, target={'pop_name': ['PyrA', '
                      sec_id=0,
                      sec_x=0.5)
 
-# ADDED THIS NO CLUE IF THIS IS RIGHT
+# NOT SURE IF THIS IS CORRECT
 dynamics_file = 'INT2INT.json'
 
 conn = net.add_edges(source={'pop_name': 'Bask'}, target={'pop_name': 'AAC'},
